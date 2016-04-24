@@ -81,7 +81,7 @@ public class DisconnectHost extends ApiHandler<Map<String, Object>> {
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("tenantId", virtualNetwork.getTenantId());
 	    Host host = virtualNetwork.getHost(hostId.intValue());
-            data.put("hostMac", host.getMac());
+            data.put("mac", host.getMac());
             jsonMessage.put("data", data);
             this.log.info("JSON Message: {}", jsonMessage.toString());
             String SERVERIP = "10.0.0.22";
