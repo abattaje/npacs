@@ -31,6 +31,7 @@ import net.onrc.openvirtex.exceptions.InvalidHostException;
 import net.onrc.openvirtex.exceptions.InvalidTenantIdException;
 import net.onrc.openvirtex.exceptions.MissingRequiredField;
 import net.onrc.openvirtex.exceptions.NetworkMappingException;
+import net.onrc.openvirtex.elements.host.Host;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -72,14 +73,15 @@ public class DisconnectHost extends ApiHandler<Map<String, Object>> {
                     tenantId);
             resp = new JSONRPC2Response(0);
             
-            /* Added by abattaje */
+            /* Added for npacs */
             // Send the message to server here
             JSONObject jsonMessage = new JSONObject();
             jsonMessage.put("op", "DELETE");
             
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("tenantId", virtualNetwork.getTenantId());
-            data.put("hostId", hostId.intValue());
+	    Host host = virtualNetwork.getHost(hostId.intValue());
+            data.put("hostMac", host.getMac());
             jsonMessage.put("data", data);
             this.log.info("JSON Message: {}", jsonMessage.toString());
             String SERVERIP = "10.0.0.22";
@@ -90,6 +92,7 @@ public class DisconnectHost extends ApiHandler<Map<String, Object>> {
             out.write(jsonMessage.toString());
             out.close();
             socket.close();
+	    /* End of - Added for npacs */
 
         } catch (final MissingRequiredField e) {
             resp = new JSONRPC2Response(
