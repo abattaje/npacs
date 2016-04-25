@@ -66,14 +66,8 @@ public class DisconnectHost extends ApiHandler<Map<String, Object>> {
             final OVXMap map = OVXMap.getInstance();
             final OVXNetwork virtualNetwork = map.getVirtualNetwork(tenantId
                     .intValue());
-
-            virtualNetwork.disconnectHost(hostId.intValue());
-
-            this.log.info("Disconnected host {} in virtual network {}", hostId,
-                    tenantId);
-            resp = new JSONRPC2Response(0);
-            
-            /* Added for npacs */
+	    
+	    /* Added for npacs */
             // Send the message to server here
             JSONObject jsonMessage = new JSONObject();
             jsonMessage.put("op", "DELETE");
@@ -81,8 +75,17 @@ public class DisconnectHost extends ApiHandler<Map<String, Object>> {
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("tenantId", virtualNetwork.getTenantId());
 	    Host host = virtualNetwork.getHost(hostId.intValue());
-            data.put("mac", host.getMac());
+            data.put("mac", host.getMac().toString());
             jsonMessage.put("data", data);
+            
+	    /* End of - Added for npacs */
+	    
+            virtualNetwork.disconnectHost(hostId.intValue());
+
+            this.log.info("Disconnected host {} in virtual network {}", hostId,
+                    tenantId);
+            resp = new JSONRPC2Response(0);
+	    /* Added for npacs */
             this.log.info("JSON Message: {}", jsonMessage.toString());
             String SERVERIP = "10.0.0.22";
             int SERVERPORT = 50000;
